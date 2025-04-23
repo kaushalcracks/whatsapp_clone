@@ -6,6 +6,9 @@ import 'screens/status_screen.dart';
 import 'screens/calls_screen.dart';
 import 'screens/contact_list_screen.dart';
 import 'screens/camera_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
+import 'providers/auth_provider.dart';
 import 'providers/chat_provider.dart';
 import 'providers/status_provider.dart';
 import 'providers/call_provider.dart';
@@ -18,6 +21,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => StatusProvider()),
         ChangeNotifierProvider(create: (_) => CallProvider()),
@@ -43,7 +47,13 @@ class WhatsAppClone extends StatelessWidget {
           primary: const Color(0xFF075E54),
         ),
       ),
-      home: const HomeScreen(),
+      home: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          return authProvider.isAuthenticated
+              ? const HomeScreen()
+              : const LoginScreen();
+        },
+      ),
     );
   }
 }
